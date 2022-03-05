@@ -57,22 +57,79 @@ class menusContoller{
   static updateMenus(req, res, next){
     const {name, description, price, imageUrl, categoryId} = req.body
 
-    if (req.user.role !== 'admin') throw {name : 'Must be Admin'}
+    Menu.findByPk(+req.params.menusId)
+    .then((menu) => {
+      if (req.user.role !== 'admin') throw {name : 'Must be Admin'}
+      if (!menu) throw {name : 'id not found'}
+      return Menu.update({
+        name,
+        description,
+        price,
+        imageUrl,
+        CategoryId: +categoryId
+      },{ 
+        where : {
+          id: req.params.menusId
+        },
+        returning : true
+      })
 
-    Menu.update({
-      name,
-      description,
-      price,
-      imageUrl,
-      CategoryId: +categoryId
-    },{ 
-      where : {
-        id: req.params.menusId
-      },
-      returning : true
     })
     .then((menu) => {
       res.status(200).json(menu[1])
+    }).catch((err) => {
+      next(err)
+    });
+  }
+
+  static deleteMenus(req, res, next){
+    const obj = {}
+
+    
+    Menu.findByPk(+req.params.menusId)
+    .then((result) => {
+      if (req.user.role !== 'admin') throw {name : 'Must be Admin'}
+      if (!result) throw {name : 'id not found'}
+
+      obj.menu = result
+
+      return Menu.destroy({
+        where: {
+          id: req.params.menusId
+        }
+      })
+
+    })
+    .then(() => {
+      res.status(200).json({"message" : `${obj.menu.name} success to delete`})
+    }).catch((err) => {
+      next(err)
+    });
+  }
+
+  static patchMenus(req, res, next){
+    const { status } = req.body
+    const obj = {}
+
+    if (req.user.role !== 'admin') throw {name : 'Must be Admin'}
+
+    Menu.findByPk(+req.params.menusId)
+    .then((result) => {
+      obj.menus = result
+
+      if (!result) throw {name : 'id not found'}
+
+      return Menu.update({
+        status
+      }, {
+        where: {
+        id: req.params.menusId
+      }, returning : true
+      })
+    })
+    .then(() => {
+      console.log(obj);
+      res.status(200).json({menus : obj.menus})
     }).catch((err) => {
       next(err)
     });

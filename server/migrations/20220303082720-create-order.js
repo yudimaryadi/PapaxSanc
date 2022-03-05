@@ -22,6 +22,10 @@ module.exports = {
           key : 'id'
         }
       },
+      statusOrder: {
+        type: Sequelize.STRING,
+        defaultValue : 'waiting'
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE

@@ -8,6 +8,10 @@ function errorHandler(err, req, res, next){
     res.status(400).json({message})
     }
 
+    // else if (err.name = 'Customer Only') {
+    //     res.status(401).json({ message: 'Customer Only'})
+    // }
+
     else if (err.name == 'Must be Admin') {
         res.status(400).json({message : 'Must be Admin'})
     }
