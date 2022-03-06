@@ -39,7 +39,7 @@ class customerController {
       if (data && comparePassword(password, data.password)){
         res.status(200).json({access_token : sign({id : data.id, email: data.email})})
       }else {
-        throw {name : 'invalid email or password'}
+        throw ({name : 'invalid email or password'})
       }
     }).catch((err) => {
       next(err)

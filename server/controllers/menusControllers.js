@@ -8,7 +8,8 @@ class menusContoller{
         attributes: {
           exclude: ["password", "createdAt", "updatedAt"]
         }
-      }, Category]
+      }, Category],
+      order: [['id', 'DESC']]
     })
     .then((result) => {
       res.status(200).json({data: result, user: req.user})
@@ -84,7 +85,6 @@ class menusContoller{
 
   static deleteMenus(req, res, next){
     const obj = {}
-
     
     Menu.findByPk(+req.params.menusId)
     .then((result) => {
@@ -111,7 +111,7 @@ class menusContoller{
     const { status } = req.body
     const obj = {}
 
-    if (req.user.role !== 'admin') throw {name : 'Must be Admin'}
+    if (req.user.role !== 'admin') throw ({name : 'Must be Admin'})
 
     Menu.findByPk(+req.params.menusId)
     .then((result) => {
@@ -127,9 +127,8 @@ class menusContoller{
       }, returning : true
       })
     })
-    .then(() => {
-      console.log(obj);
-      res.status(200).json({menus : obj.menus})
+    .then((menu) => {
+      res.status(200).json({menus : menu[1]})
     }).catch((err) => {
       next(err)
     });

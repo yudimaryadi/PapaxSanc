@@ -62,11 +62,41 @@ class orderController{
           attributes: {
             exclude: ['createdAt', 'updatedAt']
           }
+        },
+        {
+          model: User,
+          attributes: {
+            exclude: ['password','createdAt', 'updatedAt']
+          }
         }
       ]
     })
     .then((result) => {
       res.status(200).json(result)
+    }).catch((err) => {
+      next(err)
+    });
+  }
+
+  static updateStatusOrder(req, res, next){
+    const { statusOrder } = req.body
+
+    if (req.user.role !== 'admin') throw {name : 'Must be Admin'}
+    
+    Order.findByPk(+req.params.id)
+    .then((result) => {
+      if (!result) throw { name : 'id not found' }
+
+      return Order.update({
+        statusOrder
+      }, {
+        where: {
+          id: req.params.id
+        }, returning: true
+      })
+    })
+    .then((order) => {
+      res.status(200).json({order : order[1]})
     }).catch((err) => {
       next(err)
     });

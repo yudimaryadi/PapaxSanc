@@ -13,14 +13,18 @@ module.exports = {
         references: {
           model: 'Menus',
           key: 'id'
-        }
+        },
+        onDelete: 'Cascade',
+        onUpdate: 'Cascade'
       },
       TableId: {
         type: Sequelize.INTEGER,
         references :{
           model : 'Tables',
           key : 'id'
-        }
+        },
+        onDelete: 'Cascade',
+        onUpdate: 'Cascade'
       },
       statusOrder: {
         type: Sequelize.STRING,

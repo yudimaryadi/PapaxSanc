@@ -11,6 +11,7 @@ indexRoutes.post('/login', userController.handleUserLogin)
 
 indexRoutes.use('/menus', menusRoutes)
 indexRoutes.get('/orders', loginAuth, orderController.showAllOrder)
+indexRoutes.patch('/orders/:id', loginAuth, orderController.updateStatusOrder)
 indexRoutes.use('/pub', customerRoutes)
 
 indexRoutes.use(errorHandler)
