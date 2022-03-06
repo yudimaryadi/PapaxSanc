@@ -57,6 +57,7 @@ export default {
       localStorage.removeItem('access_token')
       localStorage.removeItem('email')
       window.location.reload()
+      this.$router.push('/signin')
     }
   },
   computed: {

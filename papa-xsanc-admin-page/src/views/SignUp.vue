@@ -39,6 +39,9 @@
               </div>
               <div class="row">
                 <div class="update ml-auto mr-auto">
+                  <router-link to="/signin">
+                    <button type="submit" class="btn btn-danger btn-round col-sm-4 nc-icon nc-minimal-left"></button>
+                  </router-link>
                   <button type="submit" class="btn btn-primary btn-round">Sign Up</button>
                 </div>
               </div>
@@ -51,6 +54,8 @@
 </template>
 
 <script>
+
+
 export default {
   name: 'signUp',
   data(){
@@ -65,7 +70,8 @@ export default {
   },
   methods: {
     handleRegister(){
-
+      this.$store.dispatch('createUser', this.user)
+      
     }
   }
 }

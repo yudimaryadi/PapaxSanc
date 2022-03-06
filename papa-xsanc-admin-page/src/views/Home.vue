@@ -46,7 +46,11 @@
                           <img :src="menu.imageUrl" :alt="menu.name" width="200px">
                         </td>
                         <td>
-                          {{menu.status}}
+                          <select class="form-control" v-model.lazy="data.newStatus" @change="patchStatus(menu.id)">
+                            <option value="" selected disabled hidden>{{menu.status}}</option>
+                            <option value="available">available</option>
+                            <option value="sold">sold</option>
+                          </select>
                         </td>
                         <td>
                           {{menu.Category.name}}
@@ -55,8 +59,8 @@
                           {{menu.price}}
                         </td>
                         <td class="text-right">
-                          <button class="btn btn-primary nc-icon nc-alert-circle-i" type="submit"></button>
-                          <button class="btn btn-danger nc-icon nc-basket" type="submit"></button>
+                          <button class="btn btn-primary nc-icon nc-alert-circle-i" type="submit" @click="handleEdit(menu.id)"></button>
+                          <button class="btn btn-danger nc-icon nc-basket" type="submit" @click.prevent="handleDelete(menu.id)"></button>
 
                         </td>
                       </tr>
@@ -77,7 +81,30 @@
 
 export default {
   name: 'MenusList',
-  components: {
+  data() {
+    return {
+      data: {
+        id: '',
+        newStatus: ''
+      }
+    }
+  },
+  methods: {
+    handleDelete(id){
+      this.$store.dispatch('deleteMenus', id)
+    },
+    handleEdit(id){
+      this.$router.push(`/editmenu/${id}`)
+      // setTimeout(()=>{
+      //   this.$router.push(`/editmenu/${id}`)
+      // }, 1500)
+      
+    },
+
+    patchStatus(id){
+      this.data.id = id
+      this.$store.dispatch('patchStatusMenu', this.data)
+    }
   },
   computed: {
     menus(){

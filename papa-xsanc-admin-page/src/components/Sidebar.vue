@@ -25,10 +25,12 @@
           </router-link>
         </li>
         <li>
-          <a href="#">
-            <i class="nc-icon nc-tile-56"></i>
-            <p>Add Table</p>
-          </a>
+          <router-link to="/addmenu">
+            <a href="">
+              <i class="nc-icon nc-tile-56"></i>
+              <p>Add Menu</p>
+            </a>
+          </router-link>
         </li>
         <li>
           <router-link to="/orders">

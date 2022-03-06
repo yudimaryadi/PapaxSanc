@@ -4,7 +4,7 @@
       <div class="col-md-12">
         <div class="card">
           <div class="card-header">
-            <h4 class="card-title"> Simple Table</h4>
+            <h4 class="card-title"> Order List</h4>
           </div>
           <div class="card-body">
             <div>
@@ -23,19 +23,23 @@
                     Status Menu
                   </th>
                 </thead>
-                <tbody>
+                <tbody v-for="order in orders" :key="order.id">
                   <tr>
                     <td>
-                      Dakota Rice
+                      {{order.User.email}}
                     </td>
                     <td>
-                      Niger
+                      {{order.Table.name}}
                     </td>
                     <td>
-                      Oud-Turnhout
+                      {{order.Menu.name}}
                     </td>
                     <td class="text-right">
-                      waiting
+                      <select class="form-control" v-model.lazy="data.newStatus" @change="patchStatusOrder(order.id)">
+                        <option value="" selected disabled hidden>{{order.statusOrder}}</option>
+                        <option value="waiting">waiting</option>
+                        <option value="complate">complate</option>
+                      </select>
                     </td>
                   </tr>
                 </tbody>
@@ -50,7 +54,29 @@
 
 <script>
 export default {
-
+  name: 'OrderList',
+  data() {
+    return {
+      data: {
+        id: '',
+        newStatus: ''
+      }
+    }
+  },
+  methods: {
+    patchStatusOrder(id){
+      this.data.id = id
+      this.$store.dispatch('patchStatusOrder', this.data)
+    }
+  },
+  computed: {
+    orders(){
+      return this.$store.state.orders.data
+    }
+  },
+  created() {
+    this.$store.dispatch('getOrders')
+  }
 }
 </script>
 

@@ -26,7 +26,7 @@
                 </div>
               </div>
               <center>
-              <p>if you don't have an account please <router-link to="/"><a>SignUp</a></router-link></p>
+              <p>if you don't have an account please <router-link to="/signup"><a>SignUp</a></router-link></p>
               </center>
               <div class="row">
                 <div class="update ml-auto mr-auto">
@@ -42,6 +42,8 @@
 </template>
 
 <script>
+import Swal from 'sweetalert2'
+
 export default {
   name: 'SignIn',
   data() {
@@ -64,6 +66,13 @@ export default {
         window.location.reload()
       }).catch((err) => {
         console.log(err);
+        if (err.message == 'Request failed with status code 401'){
+          Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'Invalid Email/Password!',
+          })
+        }
       });
     }
   }
