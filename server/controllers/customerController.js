@@ -47,7 +47,6 @@ class customerController {
   }
 
   static onGoogle(req, res, next){
-
     client.verifyIdToken({
       idToken: req.body.id_token,
       audience: process.env.GOOGLE_ID
@@ -71,7 +70,7 @@ class customerController {
         let code = 200
         if (isCreated) code = 201
 
-        res.status(code).json({access_token : jwt.sign({id : user.id, email: user.email})})
+        res.status(code).json({access_token : sign({id : user.id, email: user.email}), user: user.email})
     })
     .catch((err) => {
         next(err)
