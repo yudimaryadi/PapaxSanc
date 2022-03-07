@@ -38,6 +38,16 @@ const routes = [
     path: '/editmenu/:id',
     name: 'EditMenu',
     component: () => import('../views/EditMenuPage.vue')
+  },
+  {
+    path: '/maps',
+    name: 'Maps',
+    component: () => import('../components/Maps.vue')
+  },
+  {
+    path: '/paggination',
+    name: 'Paggination',
+    component: () => import('../components/Paggination.vue')
   }
 ]
 

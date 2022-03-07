@@ -42,14 +42,12 @@
         </select>
     </div>
   </div>
-  <div class="row">
-    <div class="update ml-auto mr-auto">
+    <div class="update col-md-6 ml-auto mr-auto">
       <router-link to="/">
-        <button type="submit" class="btn btn-danger btn-round col-sm-4 nc-icon nc-minimal-left"></button>
+        <button type="submit" class="btn btn-danger btn-round nc-icon nc-minimal-left"></button>
       </router-link>
       <button type="submit" class="btn btn-primary btn-round">Sign Up</button>
     </div>
-  </div>
   </form>
 </template>
 

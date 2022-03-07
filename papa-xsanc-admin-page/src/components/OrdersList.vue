@@ -23,7 +23,7 @@
                     Status Menu
                   </th>
                 </thead>
-                <tbody v-for="order in orders" :key="order.id">
+                <tbody v-for="order in orders.data" :key="order.id">
                   <tr>
                     <td>
                       {{order.User.email}}
@@ -34,12 +34,16 @@
                     <td>
                       {{order.Menu.name}}
                     </td>
-                    <td class="text-right">
-                      <select class="form-control" v-model.lazy="data.newStatus" @change="patchStatusOrder(order.id)">
-                        <option value="" selected disabled hidden>{{order.statusOrder}}</option>
+                    <td class="text-right" v-if="orders.user.role === 'admin'">
+                      <select class="form-label" v-model.lazy="data.newStatus" @change="patchStatusOrder(order.id)">
+                        <option value="" selected disabled hidden> {{order.statusOrder}} </option>
                         <option value="waiting">waiting</option>
                         <option value="complate">complate</option>
                       </select>
+                    </td>
+
+                    <td class="text-right" v-if="orders.user.role === 'customer'">
+                      {{order.statusOrder}}
                     </td>
                   </tr>
                 </tbody>

@@ -27,12 +27,22 @@
               </div>
               <center>
               <p>if you don't have an account please <router-link to="/signup"><a>SignUp</a></router-link></p>
-              </center>
+                
+              
               <div class="row">
                 <div class="update ml-auto mr-auto">
                   <button type="submit" class="btn btn-primary btn-round">Sign In</button>
                 </div>
+                <br>
+                <p>or SignIn with : </p>
+                <GoogleLogin 
+                  :params="params" 
+                  :renderParams="renderParams" 
+                  :onSuccess="onSuccess"
+                  :onFailure="onFailure"
+                ></GoogleLogin>
               </div>
+              </center>
             </form>
           </div>
         </div>
@@ -43,6 +53,7 @@
 
 <script>
 import Swal from 'sweetalert2'
+import GoogleLogin from 'vue-google-login'
 
 export default {
   name: 'SignIn',
@@ -51,8 +62,19 @@ export default {
       user: {
         email: '',
         password: ''
-      }
+      },
+      renderParams: {
+        width: 50,
+        height: 50,
+        longtitle: true
+      },
+      params: {
+        client_id: "37191394102-gq74m3ias8tcttv4omgnus6uk6ra7tmq.apps.googleusercontent.com"
+      },
     }
+  },
+  components: {
+    GoogleLogin
   },
   methods: {
     handleLogin(){
@@ -74,6 +96,19 @@ export default {
           })
         }
       });
+    },
+
+    onSuccess(googleUser){
+      let id_token = googleUser.getAuthResponse().id_token
+      this.$store.dispatch('googleLogin', id_token)
+      this.$router.push({name : 'Home'})
+
+      setTimeout(()=>{
+        window.location.reload()
+      },950)
+    },
+    onFailure(error){
+      console.log(error);
     }
   }
 }

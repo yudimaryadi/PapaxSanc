@@ -72,7 +72,7 @@ class orderController{
       ]
     })
     .then((result) => {
-      res.status(200).json(result)
+      res.status(200).json({data: result, user: req.user})
     }).catch((err) => {
       next(err)
     });

@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import axios from 'axios'
 import Swal from 'sweetalert2'
+import {Loader} from 'google-maps';
 
 Vue.use(Vuex)
 let BASE_URL = 'http://localhost:3000'
@@ -11,7 +12,10 @@ export default new Vuex.Store({
     menus: [],
     email: '',
     orders: [],
-    menu: []
+    menu: [],
+    maps: [],
+    menusPub: [],
+    totalPage: 0
   },
   mutations: {
     SET_MENUS(state, payload){
@@ -32,6 +36,18 @@ export default new Vuex.Store({
 
     SET_MENU(state, payload){
       state.menu = payload
+    },
+
+    SET_MAPS(state, payload){
+      state.maps = payload
+    },
+
+    SET_PUB_MENUS(state, payload){
+      state.menusPub = payload
+    },
+
+    SET_TOTAL_PAGE(state, payload){
+      state.totalPage = payload
     }
   },
   actions: {
@@ -55,6 +71,30 @@ export default new Vuex.Store({
         url: `${BASE_URL}/login`,
         method: 'POST',
         data: data
+      })
+    },
+
+    googleLogin(context, id_token){
+      fetch(`${BASE_URL}/pub/loginGoogle`,{
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({id_token})
+      })
+      .then((result) => {
+          return result.json()
+      })
+      .then((res) => {
+        console.log(res);
+        if(!res.access_token){
+          throw {message: 'Invalid Email/Password'}
+        }
+        console.log(res);
+        localStorage.setItem('access_token', res.access_token)
+        localStorage.setItem('email', res.user)
+      }).catch((err) => {
+          console.log(err);
       })
     },
 
@@ -175,6 +215,30 @@ export default new Vuex.Store({
       });
     },
 
+    orderMenus(context, id){
+      axios({
+        url: `${BASE_URL}/pub/order/${id}`,
+        method: 'POST',
+        headers: {
+          access_token: localStorage.getItem('access_token')
+        },
+        data: {
+          table: 2
+        }
+      })
+      .then(() => {
+        Swal.fire('Created!', `Order Created`, 'success')
+        window.location.reload()
+        }).catch((err) => {
+        console.log(err);
+        Swal.fire({
+          icon: 'error',
+          title: 'Oops...',
+          text: `${err.message}`
+        })
+      });
+    },
+
     patchStatusOrder(context, data){
       axios({
         url: `${BASE_URL}/orders/${data.id}`,
@@ -220,6 +284,33 @@ export default new Vuex.Store({
           title: 'Oops...',
           text: `${err.message}`
         })
+      });
+    },
+
+    getMaps(context){
+      const loader = new Loader('37191394102-gq74m3ias8tcttv4omgnus6uk6ra7tmq.apps.googleusercontent.com');
+      loader.load().then(function (google) {
+        const map = new google.maps.Map(document.getElementById('map'), {
+            center: {lat: -34.397, lng: 150.644},
+            zoom: 8,
+        });
+        console.log(map);
+
+        context.commit('SET_MAPS', map)
+      });
+    },
+
+    getMenusPub(context, payload){
+      axios({
+        url: `${BASE_URL}/pub/menus/fav?page=${payload.page}&category=${payload.category}&name=${payload.name}`,
+        method: 'GET'
+      })
+      .then((result) => {
+        context.commit('SET_PUB_MENUS', result.data.menus.rows)
+        context.commit('SET_TOTAL_PAGE', result.data.totalPages)
+
+      }).catch((err) => {
+        console.log(err);
       });
     }
   },

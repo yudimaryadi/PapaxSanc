@@ -10,7 +10,7 @@
               <span class="navbar-toggler-bar bar3"></span>
             </button>
           </div>
-          <a class="navbar-brand" href="javascript:;">Admin Page</a>
+          <a class="navbar-brand" href="javascript:;">{{menus.user.role}} Page</a>
         </div>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navigation" aria-controls="navigation-index" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-bar navbar-kebab"></span>
@@ -34,7 +34,13 @@
                 </p>
               </a>
               <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink">
-                <a class="dropdown-item" @click.prevent="handleLogout">Logout</a>
+                <router-link to="/">
+                  <a class="dropdown-item" @click.prevent="handleLogout">
+                    <div class="user-menu">
+                    <GoogleLogin :params="params" :renderParams="renderParams" :logoutButton=true>Logout</GoogleLogin>
+                    </div>
+                  </a>
+                </router-link>
               </div>
             </li>
           </ul>
@@ -45,12 +51,25 @@
 </template>
 
 <script>
+import GoogleLogin from 'vue-google-login';
+
 export default {
   name: 'Nav',
   data() {
     return {
-      nav: false
+      nav: false,
+      params: {
+        client_id: "37191394102-d2dafao3rujg9p0vdn0gblleuq6dueji.apps.googleusercontent.com"
+      },
+      renderParams: {
+        width: 250,
+        height: 50,
+        longtitle: true
+      }
     }
+  },
+  components: {
+    GoogleLogin
   },
   methods: {
     handleLogout(){
@@ -63,9 +82,13 @@ export default {
   computed: {
     email(){
       return this.$store.state.email
+    },
+    menus(){
+      return this.$store.state.menus
     }
   },
   created() {
+    this.$store.dispatch('getMenus')
     this.$store.commit('SET_EMAIL_LOCAL')
 
     if (this.$store.state.email.length === 0) {
