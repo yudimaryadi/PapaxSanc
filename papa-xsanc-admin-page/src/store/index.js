@@ -13,7 +13,9 @@ export default new Vuex.Store({
     email: '',
     orders: [],
     menu: [],
-    maps: []
+    maps: [],
+    menusPub: [],
+    totalPage: 0
   },
   mutations: {
     SET_MENUS(state, payload){
@@ -38,6 +40,14 @@ export default new Vuex.Store({
 
     SET_MAPS(state, payload){
       state.maps = payload
+    },
+
+    SET_PUB_MENUS(state, payload){
+      state.menusPub = payload
+    },
+
+    SET_TOTAL_PAGE(state, payload){
+      state.totalPage = payload
     }
   },
   actions: {
@@ -207,7 +217,7 @@ export default new Vuex.Store({
 
     orderMenus(context, id){
       axios({
-        url: `${BASE_URL}/order/${id}`,
+        url: `${BASE_URL}/pub/order/${id}`,
         method: 'POST',
         headers: {
           access_token: localStorage.getItem('access_token')
@@ -287,6 +297,20 @@ export default new Vuex.Store({
         console.log(map);
 
         context.commit('SET_MAPS', map)
+      });
+    },
+
+    getMenusPub(context, payload){
+      axios({
+        url: `${BASE_URL}/pub/menus/fav?page=${payload.page}&category=${payload.category}&name=${payload.name}`,
+        method: 'GET'
+      })
+      .then((result) => {
+        context.commit('SET_PUB_MENUS', result.data.menus.rows)
+        context.commit('SET_TOTAL_PAGE', result.data.totalPages)
+
+      }).catch((err) => {
+        console.log(err);
       });
     }
   },

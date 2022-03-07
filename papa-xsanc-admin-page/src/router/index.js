@@ -43,6 +43,11 @@ const routes = [
     path: '/maps',
     name: 'Maps',
     component: () => import('../components/Maps.vue')
+  },
+  {
+    path: '/paggination',
+    name: 'Paggination',
+    component: () => import('../components/Paggination.vue')
   }
 ]
 
